@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>问卷详情</title>
+  <style>
+    .questionnaire {
+      margin: 20px;
+    }
+
+    .question {
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="questionnaire" id="questionnaire">
+    <!-- 问卷详情将由 JavaScript 动态生成 -->
+  </div>
+
+  <button class="btn" id="passBtn">通过</button>
+  <button class="btn" id="rejectBtn">不通过</button>
+
+  <script>
+    var questionnaireId = '123'; // 问卷的唯一标识符
+
+    // 模拟从 API 获取问卷详情
+    function fetchQuestionnaireDetails() {
+      // 假设 API 返回的数据格式为 JSON
+      // 这里使用 setTimeout 模拟异步请求
+      setTimeout(function () {
+        var data = {
+          title: "问卷标题",
+          questions: [
+            { text: "问题1", type: "单选", options: ["选项A", "选项B", "选项C"] },
+            { text: "问题2", type: "多选", options: ["选项X", "选项Y", "选项Z"] },
+            // 其他问题...
+          ]
+        };
+
+        // 渲染问卷详情
+        var questionnaire = document.getElementById("questionnaire");
+        questionnaire.innerHTML = "";
+
+        var title = document.createElement("h2");
+        title.textContent = data.title;
+        questionnaire.appendChild(title);
+
+        data.questions.forEach(function (question) {
+          var questionDiv = document.createElement("div");
+          questionDiv.classList.add("question");
+
+          var questionText = document.createElement("p");
+          questionText.textContent = question.text;
+          questionDiv.appendChild(questionText);
+
+          if (question.type === "单选" || question.type === "多选") {
+            question.options.forEach(function (option) {
+              var optionLabel = document.createElement("label");
+              var optionInput = document.createElement("input");
+              optionInput.type = (question.type === "单选") ? "radio" : "checkbox";
+              optionInput.name = question.text;
+              optionInput.value = option;
+              optionLabel.appendChild(optionInput);
+              optionLabel.appendChild(document.createTextNode(option));
+              questionDiv.appendChild(optionLabel);
+            });
+          }
+
+          questionnaire.appendChild(questionDiv);
+        });
+      }, 500); // 模拟延迟
+    }
+
+    // 点击通过按钮的事件处理程序
+    document.getElementById("passBtn").addEventListener("click", function () {
+      sendResultToDatabase(true);
+    });
+
+    // 点击不通过按钮的事件处理程序
+    document.getElementById("rejectBtn").addEventListener("click", function () {
+      sendResultToDatabase(false);
+    });
+
+    // 将结果发送到数据库
+    function sendResultToDatabase(isPassed) {
+      // 假设这里调用了一个名为 sendResult 的 API
+      // 这里使用 setTimeout 模拟异步请求
+      setTimeout(function () {
+        // 在这里调用实际的 API 发送结果到数据库
+        console.log("问卷 " + questionnaireId + " 结果已发送到数据库");
+        console.log("是否通过：" + isPassed);
+      }, 500); // 模拟延迟
+    }
+
+    // 初始化页面，获取问卷详情
+    fetchQuestionnaireDetails();
+  </script>
+</body>
+
+</html>

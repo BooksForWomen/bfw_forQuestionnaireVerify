@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>申请创作者问卷</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .pagination button {
+      margin: 0 4px;
+      padding: 4px 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <table id="listTable">
+    <thead>
+      <tr>
+        <th>时间</th>
+        <th>用户名称</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- 表格内容将由 JavaScript 动态生成 -->
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button id="prevBtn">上一页</button>
+    <span id="currentPage"></span>
+    <button id="nextBtn">下一页</button>
+  </div>
+
+  <div id="detailPage" style="display: none;">
+    <!-- 查看详情页的内容将由 JavaScript 动态生成 -->
+  </div>
+
+  <script>
+    const currentPage = 1;
+    const pageSize = 5; // 每页显示的行数
+
+    // 从 API 获取问卷数据
+    function fetchQuestionnaireData(page) {
+      // 假设 API 返回的数据格式为 JSON
+      // 这里使用 setTimeout 模拟异步请求
+      setTimeout(function () {
+        // 调用 API 获取问卷数据
+        fetch('https://api.example.com/questionnaires?page=' + page)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            renderTable(data);
+          })
+          .catch(function (error) {
+            console.log('Error fetching questionnaire data:', error);
+          });
+      }, 500); // 模拟延迟
+    }
+
+    // 渲染表格内容
+    function renderTable(data) {
+      const tableBody = document.getElementById("tableBody");
+      tableBody.innerHTML = "";
+
+      data.forEach(function (item) {
+        const row = document.createElement("tr");
+
+        const timeCell = document.createElement("td");
+        timeCell.textContent = item.time;
+        row.appendChild(timeCell);
+
+        const projectCell = document.createElement("td");
+        projectCell.textContent = item.project;
+        row.appendChild(projectCell);
+
+        const detailCell = document.createElement("td");
+        const detailLink = document.createElement("a");
+        detailLink.href = "#"; // 根据实际情况设置详情链接
+        detailLink.textContent = "详情";
+        detailCell.appendChild(detailLink);
+        row.appendChild(detailCell);
+
+        tableBody.appendChild(row);
+
+        // 绑定点击详情链接的事件处理程序
+        detailLink.addEventListener("click", function (event) {
+          event.preventDefault();
+          showDetailPage(item.detail);
+        });
+      });
+    }
+
+    // 显示查看详情的页面
+    function showDetailPage(detail) {
+      // 隐藏表格和分页控件
+      document.getElementById("listTable").style.display = "none";
+      document.getElementsByClassName("pagination")[0].style.display = "none";
+
+      // 显示查看详情页的内容
+      const detailPage = document.getElementById("detailPage");
+      detailPage.style.display = "block";
+      detailPage.innerHTML = "";
+
+      const detailContent = document.createElement("p");
+      detailContent.textContent = "详情内容：" + detail;
+      detailPage.appendChild(detailContent);
+
+      // 添加通过和不通过按钮
+      const passBtn = document.createElement("button");
+      passBtn.textContent = "通过";
+      passBtn.addEventListener("click", function () {
+        sendResultToDatabase(detail, true);
+      });
+      detailPage.appendChild(passBtn);
+
+      const rejectBtn = document.createElement("button");
+      rejectBtn.textContent = "不通过";
+      rejectBtn.addEventListener("click", function () {
+        sendResultToDatabase(detail, false);
+      });
+      detailPage.appendChild(rejectBtn);
+    }
+
+    // 将结果发送到数据库
+    function sendResultToDatabase(detail, isPassed) {
+      // 假设API 将结果发送到数据库的代码已经实现
+      console.log("发送结果到数据库：详情：" + detail + "，是否通过：" + isPassed);
+
+      // 返回列表页
+      showListPage();
+    }
+
+    // 显示列表页
+    function showListPage() {
+      // 隐藏查看详情页的内容
+      document.getElementById("detailPage").style.display = "none";
+
+      // 显示表格和分页控件
+      document.getElementById("listTable").style.display = "block";
+      document.getElementsByClassName("pagination")[0].style.display = "block";
+
+      // 重新加载当前页数据
+      fetchQuestionnaireData(currentPage);
+    }
+
+    // 上一页按钮点击事件处理程序
+    document.getElementById("prevBtn").addEventListener("click", function () {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchQuestionnaireData(currentPage);
+      }
+    });
+
+    // 下一页按钮点击事件处理程序
+    document.getElementById("nextBtn").addEventListener("click", function () {
+      currentPage++;
+      fetchQuestionnaireData(currentPage);
+    });
+
+    // 初始化页面，加载第一页数据
+    fetchQuestionnaireData(currentPage);
+  </script>
+</body>
+
+</html>
