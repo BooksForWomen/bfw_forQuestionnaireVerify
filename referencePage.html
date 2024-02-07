@@ -57,15 +57,15 @@
   </div>
 
   <script>
-    var currentPage = 1;
-    var pageSize = 5; // 每页显示的行数
+    const currentPage = 1;
+    const pageSize = 5; // 每页显示的行数
 
     // 模拟从 API 获取数据
     function fetchData(page) {
       // 假设 API 返回的数据格式为 JSON
       // 这里使用 setTimeout 模拟异步请求
       setTimeout(function () {
-        var data = [
+        const data = [
           { time: "2024-02-01", project: "项目A", detail: "详情A" },
           { time: "2024-02-03", project: "项目B", detail: "详情B" },
           { time: "2024-02-02", project: "项目C", detail: "详情C" },
@@ -73,26 +73,26 @@
         ];
 
         // 根据分页获取当前页的数据
-        var startIndex = (page - 1) * pageSize;
-        var endIndex = startIndex + pageSize;
-        var currentPageData = data.slice(startIndex, endIndex);
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const currentPageData = data.slice(startIndex, endIndex);
 
         // 渲染表格内容
-        var tableBody = document.getElementById("tableBody");
+        const tableBody = document.getElementById("tableBody");
         tableBody.innerHTML = "";
 
         currentPageData.forEach(function (item) {
-          var row = document.createElement("tr");
-          var timeCell = document.createElement("td");
+          const row = document.createElement("tr");
+          const timeCell = document.createElement("td");
           timeCell.textContent = item.time;
           row.appendChild(timeCell);
 
-          var projectCell = document.createElement("td");
+          const projectCell = document.createElement("td");
           projectCell.textContent = item.project;
           row.appendChild(projectCell);
 
-          var detailCell = document.createElement("td");
-          var detailLink = document.createElement("a");
+          const detailCell = document.createElement("td");
+          const detailLink = document.createElement("a");
           detailLink.href = "#"; // 根据实际情况设置详情链接
           detailLink.textContent = "详情";
           detailCell.appendChild(detailLink);
@@ -116,23 +116,23 @@
       document.getElementsByClassName("pagination")[0].style.display = "none";
 
       // 显示查看详情页的内容
-      var detailPage = document.getElementById("detailPage");
+      const detailPage = document.getElementById("detailPage");
       detailPage.style.display = "block";
       detailPage.innerHTML = "";
 
-      var detailContent = document.createElement("p");
+      const detailContent = document.createElement("p");
       detailContent.textContent = "详情内容：" + detail;
       detailPage.appendChild(detailContent);
 
       // 添加通过和不通过按钮
-      var passBtn = document.createElement("button");
+      const passBtn = document.createElement("button");
       passBtn.textContent = "通过";
       passBtn.addEventListener("click", function () {
         sendResultToDatabase(detail, true);
       });
       detailPage.appendChild(passBtn);
 
-      var rejectBtn = document.createElement("button");
+      const rejectBtn = document.createElement("button");
       rejectBtn.textContent = "不通过";
       rejectBtn.addEventListener("click", function () {
         sendResultToDatabase(detail, false);
@@ -161,7 +161,7 @@
       document.getElementsByClassName("pagination")[0].style.display = "block";
 
       // 隐藏查看详情页的内容
-      var detailPage = document.getElementById("detailPage");
+      const detailPage = document.getElementById("detailPage");
       detailPage.style.display = "none";
 
       // 重新加载当前页的数据
